@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>HEZ.CART - Trending Finds. All in One Cart.</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QRCode Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+    <!-- Intro Splash Screen -->
+    <div id="introSplash" class="intro-splash">
+        <div class="splash-content">
+            <div class="splash-logo">HEZ<span>.</span>CART</div>
+            <div class="splash-tagline">TRENDING FINDS. ALL IN ONE CART.</div>
+            <div class="splash-loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <header class="navbar" id="mainNavbar">
+        <div class="logo" id="siteLogo">HEZ<span>.</span>CART</div>
+        
+        <!-- Search Bar -->
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Search footwear, clothing, accessories..." oninput="handleSearch()">
+        </div>
+
+        <!-- Actions Dock -->
+        <div class="nav-actions-dock">
+            <div class="menu-dropdown-container">
+                <button class="nav-pill-btn menu-pill" id="menuToggleBtn" onclick="toggleMenuDropdown(event)" aria-label="Menu">
+                    <span class="user-avatar-indicator"><i class="fa-solid fa-user"></i></span>
+                    <span class="pill-label" id="menuAccountLabel">Menu</span>
+                    <i class="fa-solid fa-chevron-down pill-chevron"></i>
+                </button>
+                <div class="dropdown-menu" id="navDropdownMenu">
+                    <div class="dropdown-header">
+                        <span class="dh-title">Account Menu</span>
+                    </div>
+                    <a onclick="openAuthModal()"><i class="fa-regular fa-id-badge"></i> <span id="menuAccountItem">Sign In / Profile</span></a>
+                    <a onclick="openAddressModal()"><i class="fa-solid fa-location-dot"></i> Delivery Address</a>
+                    <a onclick="openOrdersModal()"><i class="fa-solid fa-box"></i> Order History</a>
+                    <div class="dropdown-divider"></div>
+                    <a onclick="openStaticPage('terms')"><i class="fa-solid fa-file-contract"></i> Terms and Conditions</a>
+                    <a onclick="openStaticPage('about')"><i class="fa-solid fa-circle-info"></i> About Us</a>
+                    <a onclick="openStaticPage('contact')"><i class="fa-solid fa-envelope"></i> Contact Us</a>
+                    <a onclick="openStaticPage('help')"><i class="fa-solid fa-circle-question"></i> Help and FAQ</a>
+                </div>
+            </div>
+
+            <button class="nav-pill-btn cart-pill" id="cartBtn" aria-label="Shopping Cart">
+                <div class="cart-pill-icon">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span id="cartCount">0</span>
+                </div>
+                <span class="cart-pill-val" id="cartNavTotal">₹0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Search Bar -->
+    <div class="mobile-search-bar">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="mobileSearchInput" placeholder="Search products..." oninput="handleMobileSearch()">
+    </div>
+
+    <!-- MAIN STORE VIEW -->
+    <main id="homeView" class="view-container active">
+        
+        <!-- Hero Showcase -->
+        <section class="hero-showcase">
+            <div class="hero-left-box">
+                <div class="hero-action-pill">
+                    <span>PAN-INDIA STANDARD DELIVERY</span>
+                </div>
+                <h2>TRENDING FINDS.<br><span>ALL IN ONE CART.</span></h2>
+                <p>Curated collections of verified footwear, clothing, and everyday personal essentials delivered across India.</p>
+                <div class="hero-cta-group">
+                    <button class="btn-primary-block hero-btn" onclick="scrollToCatalog()">View Catalog</button>
+                </div>
+            </div>
+            
+            <div class="hero-carousel" id="heroCarousel">
+                <div class="carousel-slide active" data-id="1">
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=80" alt="Cyber Runner Shoes">
+                    <div class="banner-tag">
+                        <span class="tag-label">POPULAR</span>
+                        <div class="tag-title">Cyber Runner Shoes</div>
+                        <div class="tag-price">₹2,499</div>
+                    </div>
+                </div>
+                <div class="carousel-slide" data-id="2">
+                    <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1000&q=80" alt="Classic Black T-Shirt">
+                    <div class="banner-tag">
+                        <span class="tag-label">FEATURED</span>
+                        <div class="tag-title">Heavyweight Black T-Shirt</div>
+                        <div class="tag-price">₹899</div>
+                    </div>
+                </div>
+                <div class="carousel-slide" data-id="3">
+                    <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=1000&q=80" alt="Matte Black Watch">
+                    <div class="banner-tag">
+                        <span class="tag-label">FEATURED</span>
+                        <div class="tag-title">Matte Black Chrono Watch</div>
+                        <div class="tag-price">₹1,799</div>
+                    </div>
+                </div>
+                
+                <div class="carousel-dots">
+                    <span class="carousel-dot active" data-dot="0"></span>
+                    <span class="carousel-dot" data-dot="1"></span>
+                    <span class="carousel-dot" data-dot="2"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Selector -->
+        <section class="brand-selector-section" id="catalogStart">
+            <div class="section-badge">COLLECTIONS</div>
+            <div class="brand-grid">
+                <div class="brand-card active" data-cat="all" onclick="filterCategory('all', this)">
+                    <div class="icon-orb"><i class="fa-solid fa-border-all"></i></div>
+                    <div class="brand-meta">
+                        <span class="brand-title">All Items</span>
+                        <span class="brand-subtitle">Complete inventory</span>
+                    </div>
+                </div>
+                <div class="brand-card" data-cat="fashion" onclick="filterCategory('fashion', this)">
+                    <div class="icon-orb"><i class="fa-solid fa-shirt"></i></div>
+                    <div class="brand-meta">
+                        <span class="brand-title">Clothing & Shoes</span>
+                        <span class="brand-subtitle">Footwear and shirts</span>
+                    </div>
+                </div>
+                <div class="brand-card" data-cat="accessories" onclick="filterCategory('accessories', this)">
+                    <div class="icon-orb"><i class="fa-solid fa-glasses"></i></div>
+                    <div class="brand-meta">
+                        <span class="brand-title">Accessories</span>
+                        <span class="brand-subtitle">Watches and wallets</span>
+                    </div>
+                </div>
+                <div class="brand-card" data-cat="home" onclick="filterCategory('home', this)">
+                    <div class="icon-orb"><i class="fa-solid fa-house"></i></div>
+                    <div class="brand-meta">
+                        <span class="brand-title">Home & Workspace</span>
+                        <span class="brand-subtitle">Lighting and organizers</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Grid -->
+        <section class="shop-section">
+            <div class="catalog-header-bar">
+                <h3 id="catalogTitle">Product Catalog</h3>
+                <span class="catalog-counter" id="catalogCountDisplay">6 items</span>
+            </div>
+            <div class="product-grid" id="productGrid">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- PRODUCT DETAIL VIEW -->
+    <div id="detailView" class="view-container">
+        <div class="detail-nav-bar">
+            <button class="back-home-btn" id="backToHomeBtn" onclick="showHome()">
+                <i class="fa-solid fa-arrow-left"></i> Back to Products
+            </button>
+        </div>
+        <div class="product-detail-layout" id="productDetailContent"></div>
+    </div>
+
+    <!-- STATIC PAGES VIEW -->
+    <div id="pageView" class="view-container">
+        <div class="detail-nav-bar">
+            <button class="back-home-btn" onclick="showHome()">
+                <i class="fa-solid fa-arrow-left"></i> Back to Store
+            </button>
+        </div>
+        <div class="static-page-content" id="staticPageContent"></div>
+    </div>
+
+    <!-- AUTHENTICATION MODAL -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-box">
+            <button class="close-auth" onclick="closeAuthModal()">&times;</button>
+            <div class="modal-header">
+                <h2>Account <span>Profile</span></h2>
+                <p>Enter your details to track orders and delivery updates.</p>
+            </div>
+            <form class="auth-form" onsubmit="handleAuth(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="authName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="authEmail" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <div class="input-group-addon">
+                        <span class="input-prefix">+91</span>
+                        <input type="tel" id="authPhone" placeholder="10-digit mobile number" maxlength="10" oninput="handlePhoneInput(this)" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary-block submit-mt">Save Details</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADDRESS MANAGER MODAL -->
+    <div class="auth-modal" id="addressModal">
+        <div class="auth-box">
+            <button class="close-auth" onclick="closeAddressModal()">&times;</button>
+            <div class="modal-header">
+                <h2>Shipping <span>Address</span></h2>
+                <p>Provide complete address details for courier dispatch.</p>
+            </div>
+            <form class="auth-form" onsubmit="saveAddress(event)">
+                <div class="form-group">
+                    <label>Recipient Name</label>
+                    <input type="text" id="addrName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <label>Contact Phone</label>
+                    <div class="input-group-addon">
+                        <span class="input-prefix">+91</span>
+                        <input type="tel" id="addrPhone" placeholder="10-digit mobile number" maxlength="10" oninput="handlePhoneInput(this)" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>House / Flat / Building</label>
+                    <input type="text" id="addrBuilding" placeholder="Building name or number" required>
+                </div>
+                <div class="form-group">
+                    <label>Street / Area / Landmark</label>
+                    <input type="text" id="addrRoad" placeholder="Road, area, or landmark" required>
+                </div>
+                <div class="grid-two-col">
+                    <div class="form-group">
+                        <label>Postal Code</label>
+                        <input type="text" id="addrPin" placeholder="6-digit PIN code" maxlength="6" oninput="handlePinInput(this)" required>
+                    </div>
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="addrCity" placeholder="City" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text" id="addrState" placeholder="State" required>
+                </div>
+                <button type="submit" class="btn-primary-block submit-mt">Save Address</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ORDERS HISTORY MODAL -->
+    <div class="auth-modal" id="ordersModal">
+        <div class="auth-box order-box">
+            <button class="close-auth" onclick="closeOrdersModal()">&times;</button>
+            <div class="modal-header">
+                <h2>Order <span>History</span></h2>
+                <p>List of confirmed orders placed from this browser session.</p>
+            </div>
+            <div id="ordersListContainer" class="orders-scroll-container">
+                <p class="empty-cart">No past orders found.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAYMENT METHOD MODAL -->
+    <div class="auth-modal" id="paymentModal">
+        <div class="auth-box text-center">
+            <button class="close-auth" onclick="closePaymentModal()">&times;</button>
+            <div class="modal-header">
+                <h2>Payment <span>Method</span></h2>
+                <div class="order-summary-pill">
+                    <span>Payable Total:</span>
+                    <strong id="paymentAmountText">₹0</strong>
+                </div>
+            </div>
+            
+            <div class="payment-options-stack">
+                <button type="button" class="btn-primary-block gateway-btn" onclick="payWithUPIApp()">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                    <div class="gateway-info">
+                        <strong>Pay Using UPI Application</strong>
+                        <small>Direct transfer via Google Pay, PhonePe, or Paytm</small>
+                    </div>
+                </button>
+                <button type="button" class="btn-secondary-block gateway-btn" onclick="openQRModal()">
+                    <i class="fa-solid fa-qrcode"></i>
+                    <div class="gateway-info">
+                        <strong>Scan UPI QR Code</strong>
+                        <small>Scan and pay using any banking application</small>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR CODE PAYMENT MODAL -->
+    <div class="auth-modal" id="qrModal">
+        <div class="auth-box text-center" style="max-width: 440px;">
+            <button class="close-auth" onclick="closeQRModal()">&times;</button>
+            <div class="modal-header">
+                <h2>Scan and <span>Pay</span></h2>
+                <p id="qrModalAmount" class="payment-highlight-text">Total: ₹0</p>
+            </div>
+            
+            <div class="qr-card-plate">
+                <div id="qrcodeContainer"></div>
+                <div class="merchant-vpa-chip">
+                    <span>UPI ID</span>
+                    <strong>ornixteam@oksbi</strong>
+                </div>
+            </div>
+
+            <div class="clean-payment-steps">
+                <div class="pay-step-row">
+                    <span class="step-num">1</span>
+                    <div class="step-desc">Scan using <strong>Google Pay, PhonePe, or Paytm</strong> and transfer the exact amount.</div>
+                </div>
+                <div class="pay-step-row">
+                    <span class="step-num">2</span>
+                    <div class="step-desc">Check your transaction history and copy the <strong>12-digit UTR or Reference Number</strong>.</div>
+                </div>
+                <div class="pay-step-row">
+                    <span class="step-num">3</span>
+                    <div class="step-desc">Enter the 12 digits below to submit your order.</div>
+                </div>
+            </div>
+
+            <form onsubmit="event.preventDefault(); verifyQRPayment();" class="utr-form">
+                <div class="utr-input-wrapper">
+                    <input type="text" id="qrUtrInput" placeholder="Enter 12-digit UTR number" maxlength="12" oninput="validateUtrInput(this)" required>
+                    <span id="qrUtrCounter" class="utr-counter">0/12</span>
+                </div>
+                <button type="submit" class="btn-primary-block submit-mt">Verify and Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- UPI APP PAYMENT MODAL -->
+    <div class="auth-modal" id="upiAppModal">
+        <div class="auth-box text-center" style="max-width: 440px;">
+            <button class="close-auth" onclick="closeUpiAppModal()">&times;</button>
+            <div class="modal-header">
+                <h2>Pay with <span>UPI Application</span></h2>
+                <p id="upiAppModalAmount" class="payment-highlight-text">Total: ₹0</p>
+            </div>
+            
+            <button type="button" class="btn-primary-block" onclick="launchUpiDeepLink()" style="margin-bottom: 14px;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Open UPI Application
+            </button>
+
+            <div class="clean-payment-steps">
+                <div class="pay-step-row">
+                    <span class="step-num">1</span>
+                    <div class="step-desc">Complete payment in your UPI app and return to this browser page.</div>
+                </div>
+                <div class="pay-step-row">
+                    <span class="step-num">2</span>
+                    <div class="step-desc">Locate the <strong>12-digit UTR or Reference Number</strong> on your receipt and enter it below.</div>
+                </div>
+            </div>
+
+            <form onsubmit="event.preventDefault(); verifyUpiAppPayment();" class="utr-form">
+                <div class="utr-input-wrapper">
+                    <input type="text" id="upiAppUtrInput" placeholder="Enter 12-digit UTR number" maxlength="12" oninput="validateUtrInput(this)" required>
+                    <span id="upiUtrCounter" class="utr-counter">0/12</span>
+                </div>
+                <button type="submit" class="btn-primary-block submit-mt">Verify and Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div class="auth-modal" id="successModal">
+        <div class="auth-box text-center">
+            <div class="success-icon-wrap">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h2>Order <span>Confirmed</span></h2>
+            <p id="successModalText" class="success-text"></p>
+            <button class="btn-primary-block" onclick="closeSuccessModal()">Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- CART SIDEBAR -->
+    <aside class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <div class="cart-title-row">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <h3>SHOPPING BAG</h3>
+            </div>
+            <button id="closeCart" aria-label="Close Cart"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p class="empty-cart">Your shopping bag is empty.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-summary-line">
+                <span>Shipping</span>
+                <span class="free-pill">FREE</span>
+            </div>
+            <div class="cart-total">
+                <span>Total Amount:</span>
+                <span id="cartTotal">₹0</span>
+            </div>
+            <button class="btn-primary-block checkout-btn" id="checkoutBtn" onclick="checkoutOrder()">Proceed to Payment</button>
+        </div>
+    </aside>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- MANDATORY TERMS CONSENT BOTTOM BAR -->
+    <div class="terms-gate-backdrop" id="termsGateBackdrop"></div>
+    <div class="terms-gate-bar" id="termsGateBar">
+        <div class="terms-gate-content">
+            <div class="terms-gate-info">
+                <div class="terms-gate-badge">
+                    <i class="fa-solid fa-file-shield"></i> STORE TERMS AND CONDITIONS
+                </div>
+                <h3>Welcome to HEZ.CART</h3>
+                <p>
+                    Please read and accept our order policies before continuing: 
+                    <a href="javascript:void(0)" onclick="viewTermsFromGate()" class="terms-link-text">Read Full Terms and Conditions</a>.
+                </p>
+            </div>
+            
+            <div class="terms-gate-action">
+                <label class="terms-checkbox-label">
+                    <input type="checkbox" id="termsConsentCheckbox" onchange="toggleConsentBtn(this)">
+                    <span class="custom-checkmark"></span>
+                    <span class="checkbox-caption">I have read and accept all store policies and terms.</span>
+                </label>
+                <button type="button" class="btn-primary-block consent-btn" id="consentEnterBtn" onclick="acceptTermsAndEnter()" disabled>
+                    Accept and Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER WITH VERIFIED SOCIAL CHANNELS -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo" id="footerLogo">HEZ<span>.</span>CART</div>
+            <p class="footer-tagline">Trending Finds. All in One Cart.</p>
+            <div class="social-links">
+                <a href="https://www.instagram.com/hez.cart" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61595209379143" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://t.me/hezcart" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+            </div>
+            <div class="footer-bottom-bar">
+                <p class="copyright">&copy; 2026 HEZ.CART. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
