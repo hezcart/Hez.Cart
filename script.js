@@ -4,103 +4,15 @@ let userAddress = JSON.parse(localStorage.getItem('hez_address')) || null;
 let userOrders = JSON.parse(localStorage.getItem('hez_orders')) || [];
 let cart = JSON.parse(localStorage.getItem('hez_cart')) || [];
 
-// Secure Cloudflare Worker URL (Credentials protected in Cloudflare Secrets)
+// Secure Cloudflare Worker URL
 const ORDER_API_URL = "https://hezcart-order-bot.ornixteam.workers.dev";
 
 // Merchant Payment Details
 const MERCHANT_UPI = "ornixteam@oksbi";
 const MERCHANT_NAME = "Hez Cart";
 
-// Product Catalog
-const products = [
-    {
-        id: 1,
-        name: "Cyber Runner Street Shoes",
-        category: "fashion",
-        badge: "BESTSELLER",
-        price: 2499,
-        description: "Built for daily walking and running support. Breathable mesh upper, cushioned shock-absorbing sole, and reinforced stitching.",
-        sizes: ["UK 7", "UK 8", "UK 9", "UK 10"],
-        colors: ["Black/Cyan", "All Black", "Neon White"],
-        images: [
-            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
-            "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=800&q=80"
-        ],
-        reviews: [
-            { user: "Rahul S.", rating: 5, comment: "Comfortable shoes and good sole grip. Matches the pictures." }
-        ]
-    },
-    {
-        id: 2,
-        name: "Oversized Minimalist Black Tee",
-        category: "fashion",
-        badge: "FEATURED",
-        price: 899,
-        description: "Heavyweight 240 GSM organic cotton fabric with a clean drop-shoulder cut and double-stitched hem.",
-        sizes: ["S", "M", "L", "XL"],
-        colors: ["Jet Black", "Charcoal Grey"],
-        images: [
-            "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80"
-        ],
-        reviews: []
-    },
-    {
-        id: 3,
-        name: "Matte Black Chrono Watch",
-        category: "accessories",
-        badge: "POPULAR",
-        price: 1799,
-        description: "Precision quartz movement timepiece with scratch-resistant mineral glass and matte link bracelet.",
-        sizes: ["Standard"],
-        colors: ["Matte Black", "Rose Gold/Black"],
-        images: [
-            "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80"
-        ],
-        reviews: []
-    },
-    {
-        id: 4,
-        name: "Minimalist Leather Wallet",
-        category: "accessories",
-        badge: "ESSENTIAL",
-        price: 699,
-        description: "Genuine leather bifold wallet with integrated RFID-blocking slots for cards and currency.",
-        sizes: ["Standard"],
-        colors: ["Tan Brown", "Stealth Black"],
-        images: [
-            "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"
-        ],
-        reviews: []
-    },
-    {
-        id: 5,
-        name: "RGB Ambient LED Desk Light",
-        category: "home",
-        badge: "LIGHTING",
-        price: 1299,
-        description: "Desktop atmosphere illumination bar with customizable solid and dynamic lighting presets.",
-        sizes: ["Standard"],
-        colors: ["Matte Black"],
-        images: [
-            "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80"
-        ],
-        reviews: []
-    },
-    {
-        id: 6,
-        name: "Modern Geometric Desk Organizer",
-        category: "home",
-        badge: "WORKSPACE",
-        price: 999,
-        description: "Durable multi-compartment desktop caddy for stationary, small electronics, and accessories.",
-        sizes: ["Standard"],
-        colors: ["Matte White", "Matte Black"],
-        images: [
-            "https://images.unsplash.com/photo-1595515106967-1ce2e176ff1b?auto=format&fit=crop&w=800&q=80"
-        ],
-        reviews: []
-    }
-];
+// Dynamic Product Storage (Loaded 100% from products.json)
+let products = [];
 
 let selectedSize = '';
 let selectedColor = '';
@@ -109,6 +21,20 @@ let pendingOrderTotal = 0;
 let currentSlideIndex = 0;
 let carouselInterval = null;
 
+// Async Product Loader
+async function loadProductsFromJSON() {
+    try {
+        const response = await fetch('products.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        products = await response.json();
+    } catch (err) {
+        console.error("Failed to load products.json:", err);
+    } finally {
+        filterCategory('all', document.querySelector('.brand-card[data-cat="all"]'));
+    }
+}
 // Notification Toast Helper
 function showToast(message) {
     const oldToast = document.getElementById('customToast');
@@ -236,7 +162,7 @@ function showHome() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Product Details & Reviews
+// Product Details & Reviews (Sign-in Restricted)
 function showProductDetail(productId) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
@@ -250,7 +176,7 @@ function showProductDetail(productId) {
     selectedColor = product.colors[0];
     selectedRating = 5;
 
-    const avgRating = product.reviews.length > 0 
+    const avgRating = product.reviews && product.reviews.length > 0 
         ? (product.reviews.reduce((sum, r) => sum + r.rating, 0) / product.reviews.length).toFixed(1)
         : 5.0;
 
@@ -273,7 +199,7 @@ function showProductDetail(productId) {
                 <span class="tax-tag">Inclusive of all taxes</span>
             </div>
             <div class="details-rating">
-                ${getStarIcons(avgRating)} <strong>${avgRating}</strong> <span>(${product.reviews.length} reviews)</span>
+                ${getStarIcons(avgRating)} <strong>${avgRating}</strong> <span>(${product.reviews ? product.reviews.length : 0} reviews)</span>
             </div>
             <p class="details-desc">${product.description}</p>
             
@@ -303,7 +229,7 @@ function showProductDetail(productId) {
             <div style="margin-top: 15px; border-top: 1px solid var(--border-subtle); padding-top: 15px;">
                 <h4 style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-dim); margin-bottom: 8px;">Customer Reviews</h4>
                 <div style="max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
-                    ${product.reviews.length === 0 ? '<p style="font-size: 12px; color: var(--text-dim);">No customer reviews available yet.</p>' : 
+                    ${(!product.reviews || product.reviews.length === 0) ? '<p style="font-size: 12px; color: var(--text-dim);">No customer reviews available yet.</p>' : 
                         product.reviews.map(r => `
                             <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px; font-size: 12px; border: 1px solid var(--border-subtle);">
                                 <div style="display: flex; justify-content: space-between;">
@@ -315,22 +241,36 @@ function showProductDetail(productId) {
                         `).join('')}
                 </div>
                 
-                <form onsubmit="submitProductReview(event, ${product.id})">
-                    <div class="rating-picker-row">
-                        <span class="rating-picker-label">Rating:</span>
-                        <div class="star-rating-select" id="starPicker">
-                            <i class="fa-solid fa-star active" onclick="setPickRating(1)"></i>
-                            <i class="fa-solid fa-star active" onclick="setPickRating(2)"></i>
-                            <i class="fa-solid fa-star active" onclick="setPickRating(3)"></i>
-                            <i class="fa-solid fa-star active" onclick="setPickRating(4)"></i>
-                            <i class="fa-solid fa-star active" onclick="setPickRating(5)"></i>
+                ${currentUser ? `
+                    <!-- Signed-in User Review Form -->
+                    <form onsubmit="submitProductReview(event, ${product.id})">
+                        <div style="font-size: 11px; color: var(--text-dim); margin-bottom: 6px;">
+                            Posting review as: <strong style="color: var(--accent-cyan);">${currentUser.name}</strong>
                         </div>
+                        <div class="rating-picker-row">
+                            <span class="rating-picker-label">Rating:</span>
+                            <div class="star-rating-select" id="starPicker">
+                                <i class="fa-solid fa-star active" onclick="setPickRating(1)"></i>
+                                <i class="fa-solid fa-star active" onclick="setPickRating(2)"></i>
+                                <i class="fa-solid fa-star active" onclick="setPickRating(3)"></i>
+                                <i class="fa-solid fa-star active" onclick="setPickRating(4)"></i>
+                                <i class="fa-solid fa-star active" onclick="setPickRating(5)"></i>
+                            </div>
+                        </div>
+                        <div class="review-input-flex">
+                            <input type="text" id="reviewCommentInput" placeholder="Write your review here..." required>
+                            <button type="submit">Submit</button>
+                        </div>
+                    </form>
+                ` : `
+                    <!-- Guest View Gate -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px dashed var(--border-subtle); padding: 12px; border-radius: var(--radius-sm); text-align: center;">
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">Only verified signed-in customers can submit reviews.</p>
+                        <button type="button" class="btn-primary-block" style="width: auto; padding: 6px 14px; font-size: 11px; display: inline-flex; align-items: center; gap: 6px;" onclick="openAuthModal()">
+                            <i class="fa-regular fa-id-badge"></i> Sign In to Leave a Review
+                        </button>
                     </div>
-                    <div class="review-input-flex">
-                        <input type="text" id="reviewCommentInput" placeholder="Write your review here..." required>
-                        <button type="submit">Submit</button>
-                    </div>
-                </form>
+                `}
             </div>
         </div>
     `;
@@ -352,20 +292,28 @@ function setPickRating(rating) {
 
 function submitProductReview(event, productId) {
     event.preventDefault();
+
+    if (!currentUser) {
+        showToast("Please sign in first to submit a review.");
+        openAuthModal();
+        return;
+    }
+
     const input = document.getElementById('reviewCommentInput');
-    const comment = input.value.trim();
+    const comment = input ? input.value.trim() : '';
     if (!comment) return;
 
     const product = products.find(p => p.id === productId);
-    const author = currentUser ? currentUser.name : "Verified Customer";
+    if (!product) return;
     
+    if (!product.reviews) product.reviews = [];
     product.reviews.unshift({
-        user: author,
+        user: currentUser.name || "Verified Customer",
         rating: selectedRating,
         comment: comment
     });
 
-    input.value = '';
+    if (input) input.value = '';
     showProductDetail(productId);
     showToast(`Review submitted with a ${selectedRating}-star rating.`);
 }
@@ -697,6 +645,16 @@ function handleAuth(event) {
 
     closeAuthModal();
     showToast(`Profile details saved for ${name}.`);
+
+    // Refresh detail view if user is currently looking at a product
+    const detailView = document.getElementById('detailView');
+    if (detailView && detailView.classList.contains('active')) {
+        const currentTitle = document.querySelector('.details-title');
+        if (currentTitle) {
+            const product = products.find(p => p.name === currentTitle.textContent);
+            if (product) showProductDetail(product.id);
+        }
+    }
 }
 
 function openAddressModal() {
@@ -990,7 +948,7 @@ function checkTermsConsent() {
 
 // Application Boot
 document.addEventListener('DOMContentLoaded', () => {
-    // 1.1s Fast Clean Splash
+    // Fast Clean Splash
     const splash = document.getElementById('introSplash');
     if (splash) {
         if (!sessionStorage.getItem('hez_splash_shown')) {
@@ -1013,8 +971,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     updateCartUI();
-    filterCategory('all', document.querySelector('.brand-card[data-cat="all"]'));
     initCarousel();
+    
+    // Fetch products dynamically from products.json
+    loadProductsFromJSON();
 });
 
 document.getElementById('cartBtn').addEventListener('click', openCartSidebar);

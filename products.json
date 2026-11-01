@@ -1,0 +1,142 @@
+[
+  {
+    "id": 7,
+    "name": "Mean Sneakers",
+    "category": "fashion",
+    "badge": "NEW",
+    "price": 900,
+    "description": "Curated premium mean sneakers.",
+    "sizes": [
+      "IND-9",
+      "IND-10"
+    ],
+    "colors": [
+      "Black"
+    ],
+    "images": [
+      "images/mean_sneakers_1.jpg",
+      "images/mean_sneakers_2.jpg",
+      "images/mean_sneakers_3.jpg"
+    ],
+    "reviews": []
+  },
+  {
+    "id": 1,
+    "name": "High Top Sneaker ",
+    "category": "fashion",
+    "badge": "BESTSELLER",
+    "price": 950,
+    "description": "Built for daily walking and running support. Breathable mesh upper, cushioned shock-absorbing sole, and reinforced stitching.",
+    "sizes": [
+      "IND-8",
+      "IND-9",
+      "IND-10"
+    ],
+    "colors": [
+      "Black"
+    ],
+    "images": [
+      "images/hsshoe1.jpg",
+      "images/hsshoe3.jpg",
+      "images/hsshoe2.jpg"
+    ],
+    "reviews": []
+  },
+  {
+    "id": 2,
+    "name": "Oversized Minimalist Black Tee",
+    "category": "fashion",
+    "badge": "FEATURED",
+    "price": 899,
+    "description": "Heavyweight 240 GSM organic cotton fabric with a clean drop-shoulder cut and double-stitched hem.",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [
+      "Jet Black",
+      "Charcoal Grey"
+    ],
+    "images": [
+      "images/tshirt-front.jpg"
+    ],
+    "reviews": []
+  },
+  {
+    "id": 3,
+    "name": "Matte Black Chrono Watch",
+    "category": "accessories",
+    "badge": "POPULAR",
+    "price": 1799,
+    "description": "Precision quartz movement timepiece with scratch-resistant mineral glass and matte link bracelet.",
+    "sizes": [
+      "Standard"
+    ],
+    "colors": [
+      "Matte Black",
+      "Rose Gold/Black"
+    ],
+    "images": [
+      "images/watch.png"
+    ],
+    "reviews": []
+  },
+  {
+    "id": 4,
+    "name": "Minimalist Leather Wallet",
+    "category": "accessories",
+    "badge": "ESSENTIAL",
+    "price": 699,
+    "description": "Genuine leather bifold wallet with integrated RFID-blocking slots for cards and currency.",
+    "sizes": [
+      "Standard"
+    ],
+    "colors": [
+      "Tan Brown",
+      "Stealth Black"
+    ],
+    "images": [
+      "images/wallet.jpg"
+    ],
+    "reviews": []
+  },
+  {
+    "id": 5,
+    "name": "RGB Ambient LED Desk Light",
+    "category": "home",
+    "badge": "LIGHTING",
+    "price": 1299,
+    "description": "Desktop atmosphere illumination bar with customizable solid and dynamic lighting presets.",
+    "sizes": [
+      "Standard"
+    ],
+    "colors": [
+      "Matte Black"
+    ],
+    "images": [
+      "images/light.jpg"
+    ],
+    "reviews": []
+  },
+  {
+    "id": 6,
+    "name": "Modern Geometric Desk Organizer",
+    "category": "home",
+    "badge": "WORKSPACE",
+    "price": 999,
+    "description": "Durable multi-compartment desktop caddy for stationary, small electronics, and accessories.",
+    "sizes": [
+      "Standard"
+    ],
+    "colors": [
+      "Matte White",
+      "Matte Black"
+    ],
+    "images": [
+      "images/organizer.jpg"
+    ],
+    "reviews": []
+  }
+]
